@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <a href="#/app1" >应用1</a> -->
+    <a onclick="a()" >应用1</a>
+    <!-- <a href="#/app2">应用2</a> -->
+    <a onclick="b()" >应用1</a>
+    <script src="/lib/umd/single-spa.js"></script>
+    <script>
+        function a(){
+            window.history.pushState({},'','/a')
+        }
+        function b(){
+            window.history.pushState({},'','/b')
+        }
+
+        // 参数一:注册应用的名字 2 架子啊app必须返回一个promise
+        singleSpa.registerApplocation('app1',
+            async (props) => {
+                    // bootstarp: [async (props) => {},async (props1) => {}],
+                    return {
+                        bootstarp: [async (props) => {
+                            console.log('bootstarp')
+                        }, async (props) => {
+                            console.log('bootstarp1')
+                        }, async (props) => {
+                            console.log('bootstarp2')
+                        }],
+                        mount: async (props) => {
+                            console.log('mount')
+                        },
+                        unmount: async (props) => {
+                            console.log('unmount')
+                        }
+                    }
+                },
+                // location => location.hash.startsWith('#/app1'), //根据路径判断是否加载
+                location => location.pathname.startsWith('/a'), //根据路径判断是否加载
+                {
+                    store: {
+                        name: 'zs',
+                        age: 10
+                    }
+                }
+        )
+        singleSpa.registerApplocation('app2',
+            async (props) => {
+                    // bootstarp: [async (props) => {},async (props1) => {}],
+                    return {
+                        bootstarp: [async (props) => {
+                            console.log('bootstarp2')
+                        }, async (props) => {
+                            console.log('bootstarp22')
+                        }, async (props) => {   
+                            console.log('bootstarp222')
+                        }],
+                        mount: async (props) => {
+                            console.log('mount2')
+                        },
+                        unmount: async (props) => {
+                            console.log('unmount2')
+                        }
+                    }
+                },
+                // location => location.hash.startsWith('#/app2'), //根据路径判断是否加载
+                location => location.pathname.startsWith('/b'), //根据路径判断是否加载
+                {
+                    store: {
+                        name: 'zs',
+                        age: 10
+                    }
+                }
+        )
+        singleSpa.start()
+        window.addEventListener('hashchange',() => {
+
+        })
+    </script>
+</body>
+
+</html>
